@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 style="padding:40px 40px;"</h1>
+    <h1 style="background-color:white; font-family:georgia; text-align:center; vertical-align: middle; padding:20px 10px;"> Multi-cloud Interface </h1>
+    <button type="button" class="button" style="margin:5px">
+        <a class="nav-item nav-link" href="{{ url_for('custom') }}">User-Defined</a>
+    </button>
+    <button type="button" class="button" style="margin:5px">
+        <a class="nav-item nav-link" href="{{ url_for('workload_defined') }}">Workload-Defined</a>
+    </button>
+{% endblock content %}
