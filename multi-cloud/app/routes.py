@@ -3,7 +3,7 @@ from app import app, db, bcrypt
 from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, ResourceForm
 from app.models import User
 from flask_login import login_user, current_user, logout_user, login_required
-
+from app.price import *
 
 @app.route('/')
 @app.route('/home')
@@ -64,9 +64,16 @@ def account():
 def workload_defined():
     return render_template('workload.html', title='Workload-based')
 
-@app.route('/custom')
+@app.route('/custom', methods=['GET', 'POST'])
 def custom():
+    # os
+    # storage
+    # memory
+    # cpu
     form = ResourceForm()
+    if form.validate_on_submit():
+        instance = find_instance(form.memory, form.storage)
+        print(instance)
     return render_template('custom.html', title='User-based', form=form)
 
 
