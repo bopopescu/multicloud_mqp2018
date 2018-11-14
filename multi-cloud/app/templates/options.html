@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 style="padding:40px 40px;"</h1>
+    <h1 style="padding:40px 40px;"</h1>
+    <form action="/custom/deploy" method="post">
+        <button name="button1" type="button" class="btn-options" style="margin:15px" value="hello">
+                Price: {{ instance.price }}<br>
+                <br>
+                <small class="text-muted">
+                    {% if instance_provider == "Amazon" %}
+                        Type: {{ instance.id }}<br>
+                    {% else %}
+                        Type: {{ instance.name }}<br>
+                    {% endif %}
+                    Memory: {{ instance.ram }}<br>
+                    Storage: {{ instance.disk }}<br>
+                    Provider: {{ instance_provider }}<br>
+                </small>
+        </button>
+        {% if length > 1 %}
+        <button name="button2" type="button" class="btn-options" style="margin:15px">
+                Price: {{ top_three[1].price }}<br>
+                <br>
+                <small class="text-muted">
+                    {% if types[1] == "Amazon" %}
+                        Type: {{ top_three[1].id }}<br>
+                    {% else %}
+                        Type: {{ top_three[1].name }}<br>
+                    {% endif %}
+                    Memory: {{ top_three[1].ram }}<br>
+                    Storage: {{ top_three[1].disk }}<br>
+                    Provider: {{ types[1] }}<br>
+                </small>
+        </button>
+        {% endif %}
+        {% if length == 3 %}
+        <button name="button3" type="button" class="btn-options" style="margin:15px">
+                Price: {{ top_three[2].price }}<br>
+                <br>
+                <small class="text-muted">
+                    {% if types[2] == "Amazon" %}
+                        Type: {{ top_three[2].id }}<br>
+                    {% else %}
+                        Type: {{ top_three[2].name }}<br>
+                    {% endif %}
+                    Memory: {{ top_three[2].ram }}<br>
+                    Storage: {{ top_three[2].disk }}<br>
+                    Provider: {{ types[2] }}<br>
+                </small>
+        </button>
+        {% endif %}
+        <button name="deployButton" type="submit">Deploy</button>
+    </form>
+{% endblock content %}
