@@ -5,6 +5,8 @@ from app.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from app.price import *
 
+
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -39,10 +41,12 @@ def login():
             flash('Login failed. Please check username and password.', 'danger')
     return render_template('login.html', title='Login', form=form)
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
 
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
@@ -60,9 +64,11 @@ def account():
 
     return render_template('account.html', title='Account', form=form)
 
+
 @app.route('/workload')
 def workload_defined():
     return render_template('workload.html', title='Workload-based')
+
 
 @app.route('/custom', methods=['GET', 'POST'])
 def custom():
@@ -72,9 +78,30 @@ def custom():
     # cpu
     form = ResourceForm()
     if form.validate_on_submit():
-        instance = find_instance(form.memory, form.storage)
-        print(instance)
+        instance, top_three, valid_instances = find_instance(int(form.memory.data), int(form.storage.data))
+
+        types = []
+        for i in top_three:
+            types.append(detect_type(i))
+
+        instance_provider = detect_type(instance)
+
+        return render_template('options.html', title='Options', instance=instance,
+                               top_three=top_three, instance_provider=instance_provider, types=types,
+                               length=len(top_three))
+
     return render_template('custom.html', title='User-based', form=form)
+
+
+@app.route('/custom/deploy', methods=['POST'])
+def deployment():
+    print(request.form['button1'])
+
+    return render_template('home.html', title='Home')
+    print("here")
+
+
+
 
 
 
