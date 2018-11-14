@@ -2,7 +2,7 @@ from libcloud.compute.types import Provider
 from libcloud.compute.providers import get_driver
 from libcloud.compute.drivers.ec2 import BaseEC2NodeDriver
 from datetime import datetime, timedelta
-from gather_prices import gather_prices, read_prices_from_file
+from .gather_prices import gather_prices, gather_prices, read_prices_from_file
 
 # AWS Authentication Keys
 EC2_ACCESS_ID = ''
@@ -20,7 +20,7 @@ aws_images = {
 
 # Google Cloud Platform Authentication Keys
 GCP_EMAIL = ''
-GCP_PROJECT_ID = '
+GCP_PROJECT_ID = ''
 GCP_CLIENT_ID = ''
 GCP_SECRET_KEY = ''
 GCP_PRICE_FILE = ""
