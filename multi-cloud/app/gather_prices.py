@@ -5,14 +5,14 @@ import pickle
 
 
 # AWS Authentication Keys
-EC2_ACCESS_ID = 'AKIAIU5OHVPE57I23R2A'
-EC2_SECRET_KEY = '3j8At0FFQLpPECw1shNd4dtNpmhHrVqk1b+ucq4u'
+EC2_ACCESS_ID = 'your key'
+EC2_SECRET_KEY = 'your secret'
 
 # Google Cloud Platform Authentication Keys
-GCP_EMAIL = 'libcloud-access@libcloud-221521.iam.gserviceaccount.com'
-GCP_PROJECT_ID = 'libcloud-221521'
-GCP_CLIENT_ID = '56940108935-d7fbj9uabjser872dfs5hh6o9smfoodm.apps.googleusercontent.com'
-GCP_SECRET_KEY = 'sjL9_2opO2s3wq9rogiLWnl-'
+GCP_EMAIL = 'your email'
+GCP_PROJECT_ID = 'your project'
+GCP_CLIENT_ID = 'your client'
+GCP_SECRET_KEY = 'your secret'
 
 margin = timedelta(days = 10)
 
