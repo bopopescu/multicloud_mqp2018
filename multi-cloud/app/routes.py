@@ -4,6 +4,12 @@ from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, ResourceFo
 from app.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from app.price import *
+from libcloud.compute.types import Provider
+from libcloud.compute.providers import get_driver
+from libcloud.compute.types import *
+from libcloud.compute.base import NodeSize
+from app.deployment import deployment
+import ast
 
 
 
@@ -28,12 +34,15 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    print("in login")
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
+        print("Here1")
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
+            print("Authenticated")
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
@@ -70,6 +79,8 @@ def workload_defined():
     return render_template('workload.html', title='Workload-based')
 
 
+instance2 = None
+instance_provider = None
 @app.route('/custom', methods=['GET', 'POST'])
 def custom():
     # os
@@ -77,10 +88,11 @@ def custom():
     # memory
     # cpu
     form = ResourceForm()
+
     if form.validate_on_submit():
         instance, top_three, valid_instances = find_instance(int(form.memory.data), int(form.storage.data))
-
         types = []
+        os = form.os.data
         for i in top_three:
             types.append(detect_type(i))
 
@@ -88,23 +100,109 @@ def custom():
 
         return render_template('options.html', title='Options', instance=instance,
                                top_three=top_three, instance_provider=instance_provider, types=types,
-                               length=len(top_three))
+                               length=len(top_three), os=os)
+
+    if request.method == 'POST':
+        if request.form.get('Confirm') is not None:
+            input = str(request.form.get('instance1'))
+            id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
+            os = request.form.get('os1')
+            if driver == 'Amazon':
+                driver = get_driver(Provider.EC2)
+            else:
+                driver = get_driver(Provider.GCE)
+
+            if price == "None":
+                instance = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth, price=None, driver=driver, extra=None)
+                print(instance)
+            else:
+                instance = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth, price=float(price), driver=driver, extra=None)
+                print(instance)
+
+            deployment(instance, os)
+            return render_template('deployment.html', title='Deploy')
+
+        if request.form.get('Confirm2') is not None:
+            input = str(request.form.get('instance2'))
+            print(input)
+            id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
+            os = request.form.get('os2')
+
+            if driver == 'Amazon':
+                driver = get_driver(Provider.EC2)
+            else:
+                driver = get_driver(Provider.GCE)
+
+            if price == "None":
+                instance2 = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth, price=None,
+                                    driver=driver, extra=None)
+                print(instance2)
+            else:
+                instance2 = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth,
+                                    price=float(price), driver=driver, extra=None)
+                print(instance2)
+
+        if request.form.get('Confirm3') is not None:
+            input = str(request.form.get('instance3'))
+            id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
+            os = request.form.get('os3')
+
+            if driver == 'Amazon':
+                driver = get_driver(Provider.EC2)
+            else:
+                driver = get_driver(Provider.GCE)
+
+            if price is "None":
+                instance3 = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth, price=None, driver=driver, extra=None)
+                print(instance3)
+
+            else:
+                instance3 = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth, price=float(price), driver=driver, extra=None)
+                print(instance3)
 
     return render_template('custom.html', title='User-based', form=form)
 
+def format_input(input):
+    list = input.split(",")
+    print(list)
 
-@app.route('/custom/deploy', methods=['POST'])
-def deployment():
-    print(request.form['button1'])
+    #Parse for id
+    id = list[0].split("=")[1]
+    print("ID: " + id)
 
-    return render_template('home.html', title='Home')
-    print("here")
+    #Parse for name
+    name = list[1].split("=")[1]
+    print("Name: " + name)
 
+    #Parse for ram
+    ram_parse = list[2]
+    ram = ram_parse.split("ram=")[1].split(" ")[0]
+    print("Ram: " + ram)
 
+    disk_parse = list[2]
+    disk = disk_parse.split("disk=")[1].split(" ")[0]
+    print("Disk: " + disk)
 
+    price_parse = list[2]
+    price = price_parse.split("price=")[1].split(" ")[0]
+    print("Price: " + price)
+    #Price
 
+    #Bandwidth
+    bwidth_parse = list[2]
+    bandwidth = bwidth_parse.split("bandwidth=")[1].split(" ")[0]
+    print("Bandwidth: " + bandwidth)
 
+    #Extra
 
+    driver = None
+    #Driver
+    if list[2].find('Amazon') != -1:
+        driver = "Amazon"
+    else:
+        driver ="Google"
+
+    return [id, name, ram, disk, price, bandwidth, driver, None]
 
 
 
