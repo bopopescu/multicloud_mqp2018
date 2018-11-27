@@ -1,0 +1,21 @@
+{% extends "layout2.html" %}
+{% block content %}
+  <div class="login">
+    <h2 align="left">Log in to Multi-Cloud</h2>
+    <form method="POST" action="">
+      <p>username</p>
+        <input type="username" name="username" placeholder="enter username">
+      <p>password<p>
+      <input type="password" name="password" placeholder="enter password">
+      <p><input name="remember" type="checkbox"> remember me </p>
+      <input class="button-submit" type="submit" name="submit" value="login">
+    </form>
+     <div class="border-top pt-3">
+        <small class="text-muted">
+            Don't have an account? <a class="ml-2" href="{{ url_for('register') }}"> Sign Up</a>
+        </small>
+    </div>
+  </div>
+{% endblock content %}
+
+

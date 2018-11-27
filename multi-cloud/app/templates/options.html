@@ -2,10 +2,10 @@
 {% block content %}
     <h1 style="padding:40px 40px;"</h1>
     <h1 style="padding:40px 40px;"</h1>
-    <form action="/custom/deploy" method="post">
-        <button name="button1" type="button" class="btn-options" style="margin:15px" value="hello">
-                Price: {{ instance.price }}<br>
-                <br>
+    <form action="/custom" method="post">
+        <button name="button1" type="button" class="btn-options" style="margin:15px" value="hello" onsubmit="deploy()">
+                    Price: {{ instance.price }}<br>
+                    <br>
                 <small class="text-muted">
                     {% if instance_provider == "Amazon" %}
                         Type: {{ instance.id }}<br>
@@ -16,7 +16,12 @@
                     Storage: {{ instance.disk }}<br>
                     Provider: {{ instance_provider }}<br>
                 </small>
+            <input type="submit" id="button1" align="center" name="Confirm" onclick="deployment({{instance}})">
+            <input type="hidden" name="instance1" value="{{ instance }}">
+            <input type="hidden" name="os1" value="{{ os }}">
         </button>
+    </form>
+    <form action="/custom" method="post">
         {% if length > 1 %}
         <button name="button2" type="button" class="btn-options" style="margin:15px">
                 Price: {{ top_three[1].price }}<br>
@@ -31,7 +36,12 @@
                     Storage: {{ top_three[1].disk }}<br>
                     Provider: {{ types[1] }}<br>
                 </small>
+            <input type="submit" id="button2" align="center" name="Confirm2" onclick="deployment({{instance}})">
+            <input type="hidden" name="instance2" value="{{ top_three[1] }}">
+            <input type="hidden" name="os2" value="{{ os }}">
         </button>
+    </form>
+    <form action="/custom" method="post">
         {% endif %}
         {% if length == 3 %}
         <button name="button3" type="button" class="btn-options" style="margin:15px">
@@ -47,8 +57,10 @@
                     Storage: {{ top_three[2].disk }}<br>
                     Provider: {{ types[2] }}<br>
                 </small>
+            <input type="submit" id="button3" align="center" name="Confirm3" onclick="deployment({{instance}})">
+            <input type="hidden" name="instance3" value="{{ top_three[2] }}">
+            <input type="hidden" name="os3" value="{{ os }}">
         </button>
         {% endif %}
-        <button name="deployButton" type="submit">Deploy</button>
     </form>
 {% endblock content %}
