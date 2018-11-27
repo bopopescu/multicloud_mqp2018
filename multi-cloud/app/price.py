@@ -2,12 +2,16 @@ from libcloud.compute.types import Provider
 from libcloud.compute.providers import get_driver
 from libcloud.compute.drivers.ec2 import BaseEC2NodeDriver
 from datetime import datetime, timedelta
-from .gather_prices import gather_prices, gather_prices, read_prices_from_file
+from gather_prices import gather_prices, read_prices_from_file
+from libcloud.compute.types import Provider
+from libcloud.compute.providers import get_driver
+from libcloud.pricing import download_pricing_file
 
 # AWS Authentication Keys
 EC2_ACCESS_ID = ''
 EC2_SECRET_KEY = ''
-AWS_PRICE_FILE = ""
+AWS_PRICE_FILE = "app/aws_sizes.txt"
+
 
 # AWS Amazon Machine Images
 # Access using aws_images["linux"]
@@ -18,12 +22,15 @@ aws_images = {
     "unix": "ami-0bbe6b35405ecebdb"
 }
 
+
 # Google Cloud Platform Authentication Keys
 GCP_EMAIL = ''
 GCP_PROJECT_ID = ''
 GCP_CLIENT_ID = ''
 GCP_SECRET_KEY = ''
-GCP_PRICE_FILE = ""
+GCP_PRICE_FILE = "app/gcp_sizes.txt"
+
+
 
 # GCP OS Images
 gcp_images = {
@@ -34,6 +41,7 @@ gcp_images = {
 }
 
 TIMESTAMP_FILE = "app/timestamp.txt"
+
 
 margin = timedelta(days = 10)
 
@@ -89,6 +97,9 @@ def find_instance(memory, storage):
 
     instance = find_lowest_price(valid_instances)
     top_three = find_three_choices(valid_instances)
+    print("------")
+    print(top_three)
+    print("------")
 
     if instance != None:
         print_instance_stats(instance)
@@ -161,4 +172,3 @@ def detect_type(instance):
         return "Amazon"
     else:
         return "Google"
-
