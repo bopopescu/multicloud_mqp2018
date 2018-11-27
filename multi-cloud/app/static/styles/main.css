@@ -123,3 +123,30 @@ a.article-title:hover {
 .button {
     width: 100%
 }
+
+.btn-options {
+  border-radius: 5px;
+  padding: 15px 55px;
+  font-size: 20px;
+  text-decoration: none;
+  text-align: left;
+  margin: 25px;
+  color: black;
+  position: relative;
+  display: inline-block;
+}
+
+.btn-options:hover {
+  background-color: white;
+/*  Making button bigger on hover  */
+  transform: scale(1.2) perspective(1px)
+}
+
+
+.btn-options:focus {
+  background-color: white;
+  transform: scale(1.2) perspective(1px)
+}
+
+
+
