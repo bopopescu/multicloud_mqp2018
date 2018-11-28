@@ -18,7 +18,6 @@ GCP_PRICE_FILE = "app/gcp_sizes.txt"
 GCP_IMAGES_FILE = "app/gcp_images.txt"
 
 
-
 def deployment(NodeSize, os):
     # create driver
 

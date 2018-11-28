@@ -11,6 +11,7 @@ from libcloud.pricing import download_pricing_file
 EC2_ACCESS_ID = ''
 EC2_SECRET_KEY = ''
 AWS_PRICE_FILE = "app/aws_sizes.txt"
+AWS_IMAGES_FILE = "app/aws_images.txt"
 
 
 # AWS Amazon Machine Images
@@ -22,13 +23,13 @@ aws_images = {
     "unix": "ami-0bbe6b35405ecebdb"
 }
 
-
 # Google Cloud Platform Authentication Keys
 GCP_EMAIL = ''
-GCP_PROJECT_ID = ''
+GCP_PROJECT_ID = 'libcloud-221521'
 GCP_CLIENT_ID = ''
 GCP_SECRET_KEY = ''
 GCP_PRICE_FILE = "app/gcp_sizes.txt"
+GCP_IMAGES_FILE = "app/gcp_images.txt"
 
 
 

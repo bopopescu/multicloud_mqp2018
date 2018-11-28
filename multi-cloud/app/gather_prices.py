@@ -7,6 +7,8 @@ import pickle
 EC2_ACCESS_ID = ''
 EC2_SECRET_KEY = ''
 AWS_PRICE_FILE = "app/aws_sizes.txt"
+AWS_IMAGES_FILE = "app/aws_images.txt"
+
 
 
 # AWS Amazon Machine Images
@@ -26,12 +28,14 @@ gcp_images = {
     "unix": "ubuntu-1404-trusty-v20181114"
 }
 
+
 # Google Cloud Platform Authentication Keys
 GCP_EMAIL = ''
 GCP_PROJECT_ID = ''
 GCP_CLIENT_ID = ''
 GCP_SECRET_KEY = ''
 GCP_PRICE_FILE = "app/gcp_sizes.txt"
+GCP_IMAGES_FILE = "app/gcp_images.txt"
 
 margin = timedelta(days = 10)
 
@@ -114,3 +118,4 @@ def read_prices_from_file(filename):
     sizes = pickle.load(f)
     f.close()
     return sizes
+

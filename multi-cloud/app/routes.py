@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, Response, send_file
 from app import app, db, bcrypt
 from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, ResourceForm
 from app.models import User
@@ -10,6 +10,8 @@ from libcloud.compute.types import *
 from libcloud.compute.base import NodeSize
 from app.deployment import deployment
 import ast
+import time
+
 
 
 
@@ -98,12 +100,14 @@ def custom():
 
         instance_provider = detect_type(instance)
 
-        return render_template('options.html', title='Options', instance=instance,
+        return render_template('option2.html', title='Options', instance=instance,
                                top_three=top_three, instance_provider=instance_provider, types=types,
                                length=len(top_three), os=os)
 
     if request.method == 'POST':
-        if request.form.get('Confirm') is not None:
+        user_option = request.form.get('options')
+        print("User option: " + user_option)
+        if user_option == "1":
             input = str(request.form.get('instance1'))
             id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
             os = request.form.get('os1')
@@ -119,10 +123,10 @@ def custom():
                 instance = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth, price=float(price), driver=driver, extra=None)
                 print(instance)
 
-            deployment(instance, os)
+            #deployment(instance, os)
             return render_template('deployment.html', title='Deploy')
 
-        if request.form.get('Confirm2') is not None:
+        if user_option == "2":
             input = str(request.form.get('instance2'))
             print(input)
             id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
@@ -142,7 +146,7 @@ def custom():
                                     price=float(price), driver=driver, extra=None)
                 print(instance2)
 
-        if request.form.get('Confirm3') is not None:
+        if user_option == "3":
             input = str(request.form.get('instance3'))
             id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
             os = request.form.get('os3')
@@ -161,6 +165,21 @@ def custom():
                 print(instance3)
 
     return render_template('custom.html', title='User-based', form=form)
+
+
+
+@app.route('/progress')
+def progress():
+    def generate():
+        x = 0
+
+        while x <= 100:
+            yield "data:" + str(x) + "\n\n"
+            x = x + 10
+            time.sleep(0.5)
+
+    return Response(generate(), mimetype='text/event-stream')
+
 
 def format_input(input):
     list = input.split(",")
