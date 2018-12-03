@@ -1,29 +1,7 @@
 from libcloud.compute.types import Provider
 from libcloud.compute.providers import get_driver
 from app.gather_prices import read_prices_from_file
-
-# AWS Authentication Keys
-EC2_ACCESS_ID = ''
-EC2_SECRET_KEY = ''
-AWS_PRICE_FILE = "app/aws_sizes.txt"
-AWS_IMAGES_FILE = "app/aws_images.txt"
-
-
-# Google Cloud Platform Authentication Keys
-GCP_EMAIL = ''
-GCP_PROJECT_ID = ''
-GCP_CLIENT_ID = ''
-GCP_SECRET_KEY = ''
-GCP_PRICE_FILE = "app/gcp_sizes.txt"
-GCP_IMAGES_FILE = "app/gcp_images.txt"
-
-# GCP OS Images
-gcp_images = {
-    "linux": "sles-12-sp2-sap-v20180816",
-    "win": "sql-2014-standard-windows-2012-r2-dc-v20181113",
-    "rhel": "rhel-6-v20181113",
-    "unix": "ubuntu-1404-trusty-v20181114"
-}
+from app.config import GCP_PROJECT_ID, GCP_SECRET_KEY, GCP_CLIENT_ID, GCP_IMAGES_FILE, EC2_ACCESS_ID, EC2_SECRET_KEY, AWS_IMAGES_FILE
 
 
 def deployment(NodeSize, os):

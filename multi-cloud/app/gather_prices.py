@@ -2,14 +2,7 @@ from libcloud.compute.types import Provider
 from libcloud.compute.providers import get_driver
 from datetime import timedelta
 import pickle
-
-# AWS Authentication Keys
-EC2_ACCESS_ID = ''
-EC2_SECRET_KEY = ''
-AWS_PRICE_FILE = "app/aws_sizes.txt"
-AWS_IMAGES_FILE = "app/aws_images.txt"
-
-
+from app.config import GCP_PROJECT_ID, GCP_SECRET_KEY, GCP_CLIENT_ID, GCP_IMAGES_FILE, GCP_PRICE_FILE, EC2_ACCESS_ID, EC2_SECRET_KEY, AWS_IMAGES_FILE, AWS_PRICE_FILE
 
 # AWS Amazon Machine Images
 # Access using aws_images["linux"]
@@ -27,15 +20,6 @@ gcp_images = {
     "rhel": "rhel-6-v20181113",
     "unix": "ubuntu-1404-trusty-v20181114"
 }
-
-
-# Google Cloud Platform Authentication Keys
-GCP_EMAIL = ''
-GCP_PROJECT_ID = ''
-GCP_CLIENT_ID = ''
-GCP_SECRET_KEY = ''
-GCP_PRICE_FILE = "app/gcp_sizes.txt"
-GCP_IMAGES_FILE = "app/gcp_images.txt"
 
 margin = timedelta(days = 10)
 

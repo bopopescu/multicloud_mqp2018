@@ -1,25 +1,9 @@
 from libcloud.compute.drivers.ec2 import BaseEC2NodeDriver
 from datetime import datetime, timedelta
 from gather_prices import gather_prices, read_prices_from_file, gather_images
-
-# AWS Authentication Keys
-EC2_ACCESS_ID = ''
-EC2_SECRET_KEY = ''
-AWS_PRICE_FILE = "app/aws_sizes.txt"
-AWS_IMAGES_FILE = "app/aws_images.txt"
-
-# Google Cloud Platform Authentication Keys
-GCP_EMAIL = ''
-GCP_PROJECT_ID = ''
-GCP_CLIENT_ID = ''
-GCP_SECRET_KEY = ''
-GCP_PRICE_FILE = "app/gcp_sizes.txt"
-GCP_IMAGES_FILE = "app/gcp_images.txt"
-
+from app.config import GCP_PRICE_FILE, AWS_PRICE_FILE
 
 TIMESTAMP_FILE = "app/timestamp.txt"
-
-
 margin = timedelta(days = 10)
 
 
