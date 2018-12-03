@@ -4,15 +4,27 @@ from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, ResourceFo
 from app.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from app.price import *
-from libcloud.compute.types import Provider
 from libcloud.compute.providers import get_driver
 from libcloud.compute.types import *
 from libcloud.compute.base import NodeSize
-from app.deployment import deployment
-import ast
+from app.deployment import deployment, get_node, wait_for_node
 import time
+import threading
 
 
+class DeploymentThread(object):
+
+    def __init__(self, node, os):
+
+        self.os = os
+        self.node = node
+
+        thread = threading.Thread(target=self.run, args=(node, os,))
+        thread.daemon = True
+        thread.start()
+
+    def run(self):
+        return deployment(self.node, self.os)
 
 
 @app.route('/')
@@ -111,6 +123,8 @@ def custom():
             input = str(request.form.get('instance1'))
             id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
             os = request.form.get('os1')
+            provider = driver
+
             if driver == 'Amazon':
                 driver = get_driver(Provider.EC2)
             else:
@@ -123,14 +137,19 @@ def custom():
                 instance = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth, price=float(price), driver=driver, extra=None)
                 print(instance)
 
-            #deployment(instance, os)
-            return render_template('deployment.html', title='Deploy')
+            thread = DeploymentThread(instance, os)
+            node = thread.run()
+            print(node)
+
+            return render_template('deployment.html', title='Deploy', node=node.id, provider=provider,
+                                   ip_address=node.private_ips[0], name=node.name)
 
         if user_option == "2":
             input = str(request.form.get('instance2'))
             print(input)
             id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
             os = request.form.get('os2')
+            provider = driver
 
             if driver == 'Amazon':
                 driver = get_driver(Provider.EC2)
@@ -146,10 +165,16 @@ def custom():
                                     price=float(price), driver=driver, extra=None)
                 print(instance2)
 
+            thread = DeploymentThread(instance2, os)
+            node = thread.run()
+            return render_template('deployment.html', title='Deploy', node=node.id, provider=provider,
+                                   ip_address=node.private_ips[0], name=node.name)
+
         if user_option == "3":
             input = str(request.form.get('instance3'))
             id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
             os = request.form.get('os3')
+            provider = driver
 
             if driver == 'Amazon':
                 driver = get_driver(Provider.EC2)
@@ -164,16 +189,25 @@ def custom():
                 instance3 = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth, price=float(price), driver=driver, extra=None)
                 print(instance3)
 
+            thread = DeploymentThread(instance3, os)
+            node = thread.run()
+            return render_template('deployment.html', title='Deploy', node=node.id, provider=provider,
+                                   ip_address=node.private_ips[0], name=node.name)
+
     return render_template('custom.html', title='User-based', form=form)
 
 
 
-@app.route('/progress')
-def progress():
+@app.route('/progress/<node>/<provider>', methods=['GET', 'POST'])
+def progress(node,provider):
+    print("-------progress----------")
+    print(node)
+    print(provider)
+    user_node = get_node(provider, node)
+
     def generate():
         x = 0
-
-        while x <= 100:
+        while wait_for_node(provider, user_node) and x <= 100:
             yield "data:" + str(x) + "\n\n"
             x = x + 10
             time.sleep(0.5)

@@ -93,13 +93,13 @@ def gather_images():
     }
 
     for i in gcp_image_list:
-        if i.id == gcp_images["linux"]:
+        if i.name == gcp_images["linux"]:
             images_gcp["linux"] = i
-        if i.id == gcp_images["win"]:
+        if i.name == gcp_images["win"]:
             images_gcp["win"] = i
-        if i.id == gcp_images["rhel"]:
+        if i.name == gcp_images["rhel"]:
             images_gcp["rhel"] = i
-        if i.id == gcp_images["unix"]:
+        if i.name == gcp_images["unix"]:
             images_gcp["unix"] = i
 
     write_prices_to_file("aws_images.txt", images)

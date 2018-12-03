@@ -283,16 +283,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .inputGroup {
-  background-color: #fff;
-  display: block;
-  margin: 10px 0;
+  background-color: #E0FCFB;
+  display: inline-block;
   position: relative;
+  margin: 20px 10px;
 }
+
 .inputGroup label {
   padding: 12px 30px;
   width: 100%;
   display: block;
   text-align: left;
+  text-size: 10;
   color: #3C454C;
   cursor: pointer;
   position: relative;
@@ -362,11 +364,15 @@ h1, h2, h3, h4, h5, h6 {
 
 .form {
   padding: 0 16px;
-  max-width: 400px;
   margin: 50px auto;
   font-size: 18px;
   font-weight: 600;
   line-height: 36px;
+  position: relative;
+}
+
+.paragraph {
+  text-size: 10;
 }
 
 body {
@@ -427,4 +433,15 @@ code {
 .button-submit2:hover:before,button-submit2:hover:after{
   width:100%;
   transition:800ms ease all;
+}
+
+.deploy-section {
+  position: relative;
+  background: #E0FCFB;
+  padding: 100px 100x;
+  width: auto;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }

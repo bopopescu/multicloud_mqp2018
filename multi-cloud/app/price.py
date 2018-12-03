@@ -1,11 +1,6 @@
-from libcloud.compute.types import Provider
-from libcloud.compute.providers import get_driver
 from libcloud.compute.drivers.ec2 import BaseEC2NodeDriver
 from datetime import datetime, timedelta
-from gather_prices import gather_prices, read_prices_from_file
-from libcloud.compute.types import Provider
-from libcloud.compute.providers import get_driver
-from libcloud.pricing import download_pricing_file
+from gather_prices import gather_prices, read_prices_from_file, gather_images
 
 # AWS Authentication Keys
 EC2_ACCESS_ID = ''
@@ -13,33 +8,14 @@ EC2_SECRET_KEY = ''
 AWS_PRICE_FILE = "app/aws_sizes.txt"
 AWS_IMAGES_FILE = "app/aws_images.txt"
 
-
-# AWS Amazon Machine Images
-# Access using aws_images["linux"]
-aws_images = {
-    "linux": "ami-061e7ebbc234015fe",
-    "win": "ami-017bf00eb0d4c7182",
-    "rhel": "ami-28e07e50",
-    "unix": "ami-0bbe6b35405ecebdb"
-}
-
 # Google Cloud Platform Authentication Keys
 GCP_EMAIL = ''
-GCP_PROJECT_ID = 'libcloud-221521'
+GCP_PROJECT_ID = ''
 GCP_CLIENT_ID = ''
 GCP_SECRET_KEY = ''
 GCP_PRICE_FILE = "app/gcp_sizes.txt"
 GCP_IMAGES_FILE = "app/gcp_images.txt"
 
-
-
-# GCP OS Images
-gcp_images = {
-    "linux": " sles-12-sp2-sap-v20180816	",
-    "win": " sql-2012-standard-windows-2012-r2-dc-v20181009",
-    "rhel": "rhel-7-v20181011",
-    "unix": "ubuntu-1404-trusty-v20181022"
-}
 
 TIMESTAMP_FILE = "app/timestamp.txt"
 
@@ -77,6 +53,7 @@ def find_instance(memory, storage):
 
     if current_time > (get_timestamp() + margin):
         gather_prices()
+        gather_images()
         aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
         gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
         write_timestamp(current_time)
