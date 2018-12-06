@@ -1,13 +1,13 @@
 from flask import render_template, flash, redirect, url_for, request, Response, send_file
-from app import app, db, bcrypt
-from app.forms import RegistrationForm, LoginForm, UpdateAccountForm, ResourceForm
-from app.models import User
+from . import app, db, bcrypt
+from .forms import RegistrationForm, LoginForm, UpdateAccountForm, ResourceForm, WorkloadForm
+from .models import User
 from flask_login import login_user, current_user, logout_user, login_required
-from app.price import *
+from .price import *
 from libcloud.compute.providers import get_driver
 from libcloud.compute.types import *
 from libcloud.compute.base import NodeSize
-from app.deployment import deployment, get_node, wait_for_node
+from .deployment import deployment, get_node, wait_for_node
 import time
 import threading
 
@@ -92,17 +92,41 @@ def account():
 
 @app.route('/workload')
 def workload_defined():
-    return render_template('workload.html', title='Workload-based')
+    # machine & deep learning
+    # in memory
+    # general purpose
+    form = WorkloadForm()
+    instance_provider = None
+
+    if form.validate_on_submit():
+        instance, top_three, valid_instances = find_instance_workload(int(form.type.data))
+        types = []
+        for i in top_three:
+            types.append(detect_type(i))
+        instance_provider = detect_type(instance)
+
+        return render_template('options.html', title='Options', instance=instance,
+                               top_three=top_three, instance_provider=instance_provider, types=types,
+                               length=len(top_three))
+
+    if request.method == 'POST':
+        user_option = request.form.get('options')
+        print("User option: " + user_option)
+        return render_template('login.html', title='Login', form=form)
+
+    return render_template('workload.html', title='Workload-based', form=form)
 
 
-instance2 = None
-instance_provider = None
 @app.route('/custom', methods=['GET', 'POST'])
 def custom():
-    # os
+# os
     # storage
     # memory
     # cpu
+
+    instance2 = None
+    instance_provider = None
+
     form = ResourceForm()
 
     if form.validate_on_submit():

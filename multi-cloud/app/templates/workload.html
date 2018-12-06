@@ -1,10 +1,26 @@
-{% extends "layout.html" %}
+{% extends "layout2.html" %}
 {% block content %}
-    <h1 style="padding:40px 40px;"</h1>
-    <h1 style="background-color:white; font-family:georgia; text-align:center; vertical-align: middle; padding:20px 10px;"> Workload-Defined</h1>
-    <button class="button" type="button" style="margin:5px">Machine and Deep Learning</button>
-    <button class="button" type="button" style="margin:5px">In-memory</button>
-    <button class="button" type="button" style="margin:5px">General Purpose</button>
-
-
+    <h1 style="padding:80px;"></h1>
+    <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-6"> Define Resources</legend>
+                <div class="form-group">
+                    {{ form.type.label(class="form-control-label") }}
+                    {% if form.type.errors %}
+                        {{ form.type(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.os.errors %}
+                                <span> {{ error }} </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.type(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+        <div class="form-group">
+                    {{ form.submit(class="button-submit") }}
+        </div>
+    </form>
 {% endblock content %}

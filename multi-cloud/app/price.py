@@ -1,7 +1,7 @@
 from libcloud.compute.drivers.ec2 import BaseEC2NodeDriver
 from datetime import datetime, timedelta
-from gather_prices import gather_prices, read_prices_from_file, gather_images
-from app.config import GCP_PRICE_FILE, AWS_PRICE_FILE
+from .gather_prices import gather_prices, read_prices_from_file, gather_images
+from .config import GCP_PRICE_FILE, AWS_PRICE_FILE
 
 TIMESTAMP_FILE = "app/timestamp.txt"
 margin = timedelta(days = 10)
@@ -69,6 +69,51 @@ def find_instance(memory, storage):
     else:
         return None, None, None
 
+
+def find_instance_workload(workload):
+    current_time = datetime.now()
+    gcp_sizes = []
+    aws_sizes = []
+
+    if current_time > (get_timestamp() + margin):
+        gather_prices()
+        gather_images()
+        aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
+        gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
+        write_timestamp(current_time)
+    else:
+        aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
+        gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
+
+    for s in aws_sizes:
+        # check s to see if it is of the workload we need
+        if workload == "ml":
+            if "Deep Learning" in s:
+                valid_instances.append(s)
+        elif workload == "im":
+            if ("r4."or "r5."or "r5a."or "r5d."or "x1."or "x1e."or "z1d") in s:
+                valid_instances.append(s)
+        elif workload == "gp":
+            # general purpose = all AMIs are technically ok to use
+            # append them all, algo will find cheapest one
+            valid_instances.append(s)
+
+    for gcp in gcp_sizes:
+        # check gcp to see if it is of the workload we need
+        if workload == "ml":
+            print("machine learning")
+
+    instance = find_lowest_price(valid_instances)
+    top_three = find_three_choices(valid_instances)
+    print("------")
+    print(top_three)
+    print("------")
+
+    if instance != None:
+        print_instance_stats(instance)
+        return instance, top_three, valid_instances
+    else:
+        return None, None, None
 
 def find_lowest_price(valid_instances):
     min = 100

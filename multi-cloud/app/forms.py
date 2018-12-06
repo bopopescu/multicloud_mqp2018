@@ -50,10 +50,23 @@ class UpdateAccountForm(FlaskForm):
 
 
 class ResourceForm(FlaskForm):
-    os = SelectField('Operating System', choices=[('win','Windows'),('linux','Linux'), ('rhel', 'RedHat'), ('unix', 'Unix')])
+    os = SelectField('Operating System', choices=[('win','Windows'),
+                                                  ('linux','Linux'),
+                                                  ('rhel', 'RedHat'),
+                                                  ('unix', 'Unix')])
     storage = StringField('Storage Capacity (GB)', validators=[DataRequired(), Length(min=1, max=6)])
     memory = StringField('Memory (GB)', validators=[DataRequired(), Length(min=1, max=6)])
     cpu = StringField('Number of CPUs', validators=[DataRequired(), Length(min=1, max=3)])
+    submit = SubmitField('Submit')
+
+
+class WorkloadForm(FlaskForm):
+    type = SelectField('Type of Workload',
+                       choices=[('ml', 'Machine Learning'),
+                                                    ('im','In Memory'),
+                                                    ('gp', 'General Purpose')],
+                       validators=[DataRequired()]
+                       )
     submit = SubmitField('Submit')
 
 

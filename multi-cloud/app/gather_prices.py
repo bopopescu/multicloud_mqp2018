@@ -2,7 +2,7 @@ from libcloud.compute.types import Provider
 from libcloud.compute.providers import get_driver
 from datetime import timedelta
 import pickle
-from app.config import GCP_PROJECT_ID, GCP_SECRET_KEY, GCP_CLIENT_ID, GCP_IMAGES_FILE, GCP_PRICE_FILE, EC2_ACCESS_ID, EC2_SECRET_KEY, AWS_IMAGES_FILE, AWS_PRICE_FILE
+from .config import GCP_PROJECT_ID, GCP_SECRET_KEY, GCP_CLIENT_ID, GCP_IMAGES_FILE, GCP_PRICE_FILE, EC2_ACCESS_ID, EC2_SECRET_KEY, AWS_IMAGES_FILE, AWS_PRICE_FILE
 
 # AWS Amazon Machine Images
 # Access using aws_images["linux"]
@@ -20,6 +20,27 @@ gcp_images = {
     "rhel": "rhel-6-v20181113",
     "unix": "ubuntu-1404-trusty-v20181114"
 }
+
+# Default AWS images for each type of workload
+aws_workload_defaults = {
+    # machine learning
+    "ml": "ami-0ff8a91507f77f867",
+    # in memory
+    "im": "",
+    # general purpose
+    "gp": ""
+}
+
+# Default GCP images for each type of workload
+gcp_workload_defaults = {
+    # machine learning
+    "ml": "",
+    # in memory
+    "im": "",
+    # general purpose
+    "gp": ""
+}
+
 
 margin = timedelta(days = 10)
 
@@ -39,6 +60,8 @@ def gather_prices():
     write_prices_to_file("aws_sizes.txt", aws_sizes)
     write_prices_to_file("gcp_sizes.txt", gcp_sizes)
 
+
+#gather_prices()
 
 
 def gather_images():
