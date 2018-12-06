@@ -1,12 +1,12 @@
 {% extends "layout2.html" %}
 {% block content %}
-    <h1 style="padding:40px 40px;"</h1>
-    <h1 style="padding:40px 40px;"</h1>
-    <form action="/custom" method="post">
-        <button name="button1" type="button" class="btn-options" style="margin:15px" value="hello" onsubmit="deploy()">
-                    Price: {{ instance.price }}<br>
-                    <br>
-                <small class="text-muted">
+<form action="/custom" method="post">
+    <div class="docScroller">
+        <div class="page one">
+          <div class="inside glowing-border1">
+            <input id="Confirm" name="options" type="radio" value="1"/>
+              <h1>Price: ${{ instance.price }}<br></h1>
+                 <h2>
                     {% if instance_provider == "Amazon" %}
                         Type: {{ instance.id }}<br>
                     {% else %}
@@ -15,52 +15,54 @@
                     Memory: {{ instance.ram }}<br>
                     Storage: {{ instance.disk }}<br>
                     Provider: {{ instance_provider }}<br>
-                </small>
-            <input type="submit" id="button1" align="center" name="Confirm" onclick="deployment({{instance}})">
+                </h2>
             <input type="hidden" name="instance1" value="{{ instance }}">
             <input type="hidden" name="os1" value="{{ os }}">
-        </button>
-    </form>
-    <form action="/custom" method="post">
+          </div>
+        </div>
         {% if length > 1 %}
-        <button name="button2" type="button" class="btn-options" style="margin:15px">
-                Price: {{ top_three[1].price }}<br>
-                <br>
-                <small class="text-muted">
+        <div class="page two">
+          <div class="inside glowing-border2">
+            <input id="Confirm2" name="options" type="radio" value="2"/>
+                <h1>Price: ${{ top_three[1].price }}<br></h1>
+                 <h2>
                     {% if types[1] == "Amazon" %}
                         Type: {{ top_three[1].id }}<br>
                     {% else %}
                         Type: {{ top_three[1].name }}<br>
                     {% endif %}
+                        Memory: {{ top_three[1].ram }}<br>
+                        Storage: {{ top_three[1].disk }}<br>
+                        Provider: {{ types[1] }}<br>
+                </h2>
+            <input type="hidden" name="instance2" value="{{ top_three[1] }}">
+            <input type="hidden" name="os2" value="{{ os }}">
+          </div>
+        </div>
+        {% endif %}
+        {% if length == 3 %}
+        <div class="page three">
+          <div class="inside glowing-border3">
+             <input id="Confirm3" name="options" type="radio" value="3"/>
+                <h1>Price: ${{ top_three[2].price }}<br></h1>
+                <h2>
+                 {% if types[1] == "Amazon" %}
+                    Type: {{ top_three[1].id }}<br>
+                 {% else %}
+                    Type: {{ top_three[1].name }}<br>
+                 {% endif %}
                     Memory: {{ top_three[1].ram }}<br>
                     Storage: {{ top_three[1].disk }}<br>
                     Provider: {{ types[1] }}<br>
-                </small>
-            <input type="submit" id="button2" align="center" name="Confirm2" onclick="deployment({{instance}})">
-            <input type="hidden" name="instance2" value="{{ top_three[1] }}">
-            <input type="hidden" name="os2" value="{{ os }}">
-        </button>
-    </form>
-    <form action="/custom" method="post">
+                </h2>
+             <input type="hidden" name="instance3" value="{{ top_three[2] }}">
+             <input type="hidden" name="os3" value="{{ os }}">
+          </div>
+        </div>
         {% endif %}
-        {% if length == 3 %}
-        <button name="button3" type="button" class="btn-options" style="margin:15px">
-                Price: {{ top_three[2].price }}<br>
-                <br>
-                <small class="text-muted">
-                    {% if types[2] == "Amazon" %}
-                        Type: {{ top_three[2].id }}<br>
-                    {% else %}
-                        Type: {{ top_three[2].name }}<br>
-                    {% endif %}
-                    Memory: {{ top_three[2].ram }}<br>
-                    Storage: {{ top_three[2].disk }}<br>
-                    Provider: {{ types[2] }}<br>
-                </small>
-            <input type="submit" id="button3" align="center" name="Confirm3" onclick="deployment({{instance}})">
-            <input type="hidden" name="instance3" value="{{ top_three[2] }}">
-            <input type="hidden" name="os3" value="{{ os }}">
-        </button>
-        {% endif %}
-    </form>
+    </div>
+    <div>
+        <input position="align-right" class="button-submit2" type="submit" name="submit" value="DEPLOY">
+    </div>
+</form>
 {% endblock content %}

@@ -30,7 +30,9 @@ class DeploymentThread(object):
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html', title='Home')
+    form2 = RegistrationForm()
+    form = LoginForm()
+    return render_template('home.html', title='Home', form=form, form2=form2)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -112,7 +114,7 @@ def custom():
 
         instance_provider = detect_type(instance)
 
-        return render_template('option2.html', title='Options', instance=instance,
+        return render_template('options.html', title='Options', instance=instance,
                                top_three=top_three, instance_provider=instance_provider, types=types,
                                length=len(top_three), os=os)
 
@@ -203,13 +205,17 @@ def progress(node,provider):
     print("-------progress----------")
     print(node)
     print(provider)
-    user_node = get_node(provider, node)
 
     def generate():
-        x = 0
-        while wait_for_node(provider, user_node) and x <= 100:
+        x = 1
+        while x == 1:
             yield "data:" + str(x) + "\n\n"
-            x = x + 10
+            user_node = get_node(provider, node)
+            print(user_node[0].state)
+            if user_node[0].state != 'pending':
+                print("Node ready")
+                x = 2
+                yield "data:" + str(x) + "\n\n"
             time.sleep(0.5)
 
     return Response(generate(), mimetype='text/event-stream')

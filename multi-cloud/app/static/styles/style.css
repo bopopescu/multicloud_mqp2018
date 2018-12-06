@@ -78,16 +78,6 @@ h6 {
   background: #E0FCFB;
 }
 
-.homepg{
-  position: relative;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  height: 500px;
-  padding: 80px 40px;
-  background: #E0FCFB;
-}
-
 .login h2{
   margin: 0;
   padding: 0 0 20px;
@@ -177,72 +167,6 @@ h1, h2, h3, h4, h5, h6 {
 
 }
 
-.btn {
-  display: inline-block;
-  position: relative;
-  top: 50%;
-  left: 21%;
-  letter-spacing: 1.2px;
-  padding: 12px 32px;
-  height:60px;
-  width:250px;
-  text-align: center;
-  text-transform: uppercase;
-  overflow: hidden;
-  z-index: 1;
-  cursor: pointer;
-}
-
-.btn:focus {
-  outline: none;
-}
-
-.btn--primary {
-  color: lightslategray;
-}
-
-.btn--border {
-  border-width: 1px;
-  border-style: solid;
-  border-radius: 10px;
-  box-sizing: border-box;
-}
-
-.btn--animated {
-  transition-property: color;
-  transition-duration: 0.5s;
-}
-.btn--animated.btn--border.btn--primary {
-  border: 1px solid lightslategray;
-}
-.btn--animated:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: lightslategray;
-  -webkit-transform: scaleX(0);
-          transform: scaleX(0);
-  -webkit-transform-origin: 0 50%;
-          transform-origin: 0 50%;
-  transition-property: -webkit-transform;
-  transition-property: transform;
-  transition-property: transform, -webkit-transform;
-  transition-duration: 0.5s;
-  transition-timing-function: ease-out;
-  z-index: -1;
-}
-.btn--animated:hover {
-  color: white;
-}
-.btn--animated:hover:before {
-  -webkit-transform: scaleX(1);
-          transform: scaleX(1);
-  transition-timing-function: cubic-bezier(0.45, 1.64, 0.47, 0.66);
-}
-
 /*Submit button*/
 .button-submit{
   background:#4F6272;
@@ -285,8 +209,18 @@ h1, h2, h3, h4, h5, h6 {
 .inputGroup {
   background-color: #E0FCFB;
   display: inline-block;
+  width: 31%;
   position: relative;
-  margin: 20px 10px;
+  margin: 0px 5px;
+}
+
+.form2 {
+  padding: 0 16px;
+  margin: 50px auto;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 36px;
+  position: relative;
 }
 
 .inputGroup label {
@@ -294,7 +228,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   display: block;
   text-align: left;
-  text-size: 10;
+  text-size: 12;
   color: #3C454C;
   cursor: pointer;
   position: relative;
@@ -329,8 +263,8 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 50%;
   z-index: 2;
   position: absolute;
-  right: 30px;
-  top: 50%;
+  right: 10px;
+  top: 90%;
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
   cursor: pointer;
@@ -372,7 +306,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .paragraph {
-  text-size: 10;
+  text-size: 12;
 }
 
 body {
@@ -400,9 +334,11 @@ code {
   background: #E0FCFB;
   color: #4F6272;
   border:2px solid #4F6272;
-  position: relative;
+  position: fixed;
   height:60px;
-  float: right;
+  top: 70%;
+  right: 50vw;
+  align: center center;
   font-size:1.6em;
   padding:0 2em;
   cursor:pointer;
@@ -444,4 +380,326 @@ code {
   border-radius: 3px;
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+/*Scroller*/
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Satisfy', cursive;
+  color: black;
+}
+
+.docScroller {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  overflow-y: hidden;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-scroll-snap-type: mandatory;
+      scroll-snap-type: mandatory;
+  /* older spec implementation */
+  -ms-scroll-snap-destination: 0% 100%;
+      scroll-snap-destination: 0% 100%;
+  -ms-scroll-snap-points-x: repeat(100%);
+      scroll-snap-points-x: repeat(100%);
+}
+
+.page {
+  scroll-snap-align: start;
+  width: 50%;
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+  font-size: initial;
+}
+
+.inside {
+  border: 5px solid #E0FCFB;
+  opacity: 0.95;
+  background: #E0FCFB;
+  background-position: center center;
+  width: 50vw;
+  margin: 20vh 0 0 5vw;
+  height: 40vh;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease-out;
+}
+.inside h1 {
+  opacity: 0.9;
+  text-align: center;
+  border-bottom: 2px solid #4F6272;
+  font-size: 3vw;
+  padding: 8px 0 10px;
+}
+
+.inside h2 {
+  opacity: 0.9;
+  text-align: center;
+}
+
+.one {
+  width: 50%;
+  height: 50%;
+  margin: 0 15px;
+
+}
+
+.two {
+  width: 50%;
+  height: 50%;
+  margin: 0 15px;
+}
+
+.three {
+  width: 100%;
+  height: 100%;
+  left: 50%;
+}
+
+
+svg {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  opacity: 0.5;
+  pointer-events: none;
+}
+svg path {
+  stroke: #fff;
+}
+
+.glowing-border1 {
+    border: 2px solid #82ff94;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #82ff94;
+}
+
+.glowing-border2 {
+    border: 2px solid #fcff5e;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #fcff5e;
+}
+
+.glowing-border3 {
+    border: 2px solid #fc3535;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #fc3535;
+}
+
+.flex-wrapper {
+    height: 100vh;
+    width: 80vw;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+}
+
+
+.flex-content {
+    flex: 1 0 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: space-around;
+    justify-content: space-around;
+    -webkit-align-content: flex-start;
+    align-content: flex-start;
+    -webkit-align-items: space-around;
+    align-items: space-around;
+}
+.flex-sidebar {
+    -webkit-flex: 0 1 50%;
+    flex: 0 1 50%;
+    overflow-y: scroll;
+}
+.flex-map-container {
+    position: relative;
+    -webkit-flex: 0 1 50%;
+    justify-content: center;
+    flex: 0 1 50%;
+}
+.flex-map {
+    position: absolute;
+    justify-content: center;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.in-wrapper {
+  position: relative;
+  display: inline-block;
+  align-items: left;
+  justify-content: center;
+}
+
+.in-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0px;
+}
+
+
+.btn {
+  display: inline-block;
+  position: relative;
+  letter-spacing: 1.2px;
+  padding: 12px 32px;
+  height:150px;
+  width:250px;
+  text-align: center;
+  text-transform: uppercase;
+  overflow: hidden;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn--primary {
+  color: #E0FCFB;
+}
+
+.btn--border {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.btn--animated {
+  transition-property: color;
+  transition-duration: 0.5s;
+}
+.btn--animated.btn--border.btn--primary {
+  border: 1px solid #4F6272;
+  background: #4F6272;
+}
+.btn--animated:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #E0FCFB;
+  -webkit-transform: scaleX(0);
+          transform: scaleX(0);
+  -webkit-transform-origin: 0 50%;
+          transform-origin: 0 50%;
+  transition-property: -webkit-transform;
+  transition-property: transform;
+  transition-property: transform, -webkit-transform;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-out;
+  z-index: -1;
+}
+
+.btn--animated:hover {
+  color:  #4F6272;
+}
+
+.btn--animated:hover:before {
+  -webkit-transform: scaleX(1);
+          transform: scaleX(1);
+  transition-timing-function: cubic-bezier(0.45, 1.64, 0.47, 0.66);
+}
+
+.right-side-home {
+    width: 550px;
+    height: 700px;
+    display: block;
+    top: 15%;
+    left: 0%;
+    position: relative;
+    background: #E0FCFB;
+}
+
+.right-side-home h4 {
+    text-align: center;
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+.right-side-home h6 {
+    text-align: center;
+}
+
+.right-side-home small {
+    padding-bottom: 25px;
+}
+
+.right-side-home img {
+    max-width: 100%;
+    max-height: 100%;
+    height: 50%;
+    right: 20%;
+    position: center;
+    width: auto;
+}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    animation: fadeEffect 1s; /* Fading effect takes 1 second */
+}
+
+/* Go from zero to full opacity */
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.button-block {
+    position: relative;
+    display: inline-block;
+    background: #E0FCFB;
+    width: 40vw;
+    height: 25vh;
 }
