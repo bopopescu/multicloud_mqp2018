@@ -5,17 +5,22 @@
     var source = new EventSource("/progress/{{ node }}/{{provider}}");
     source.onmessage = function(event) {
         if (event.data == 1) {
-             var element =  document.getElementById('textChange').innerHTML = "Your instance is PENDING";
+             var element =  document.getElementById('textChange').innerHTML = "PENDING";
         } else {
-            var element = document.getElementById('textChange').innerHTML = "Your instance is READY";
+            var element = document.getElementById('textChange');
+            element.removeAttribute("class");
+            element.innerHTML = "READY";
             source.close()
         }
 	}
     </script>
     <div class="deploy-section" position="relative">
         <div>
-            <div id="textChange">
-                <h3 class="border-bottom mb-6">Your instance is PENDING.</h3>
+            <div>
+                <h3>
+                    <span>Your instance is</span>
+                    <span id="textChange" class="blink_me">PENDING.</span>
+                </h3>
             </div>
             <h4>Instance name: {{ name }}</h4>
             <h4>Instance IP: {{ ip_address }}</h4>

@@ -59,9 +59,6 @@ def find_instance(memory, storage):
 
     instance = find_lowest_price(valid_instances)
     top_three = find_three_choices(valid_instances)
-    print("------")
-    print(top_three)
-    print("------")
 
     if instance != None:
         print_instance_stats(instance)
@@ -88,10 +85,11 @@ def find_instance_workload(workload):
     for s in aws_sizes:
         # check s to see if it is of the workload we need
         if workload == "ml":
-            if "Deep Learning" in s:
+            if "Deep Learning" in s.name:
+                print("Here")
                 valid_instances.append(s)
         elif workload == "im":
-            if ("r4."or "r5."or "r5a."or "r5d."or "x1."or "x1e."or "z1d") in s:
+            if ("r4."or "r5."or "r5a."or "r5d."or "x1."or "x1e."or "z1d") in s.id:
                 valid_instances.append(s)
         elif workload == "gp":
             # general purpose = all AMIs are technically ok to use

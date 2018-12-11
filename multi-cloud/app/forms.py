@@ -56,7 +56,7 @@ class ResourceForm(FlaskForm):
                                                   ('unix', 'Unix')])
     storage = StringField('Storage Capacity (GB)', validators=[DataRequired(), Length(min=1, max=6)])
     memory = StringField('Memory (GB)', validators=[DataRequired(), Length(min=1, max=6)])
-    cpu = StringField('Number of CPUs', validators=[DataRequired(), Length(min=1, max=3)])
+    name = StringField('Name of Instance', validators=[DataRequired(), Length(min=1, max=15)])
     submit = SubmitField('Submit')
 
 

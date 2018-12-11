@@ -14,24 +14,42 @@ import threading
 
 class DeploymentThread(object):
 
-    def __init__(self, node, os):
+    def __init__(self, node, os, name):
 
         self.os = os
         self.node = node
+        self.name = name
 
-        thread = threading.Thread(target=self.run, args=(node, os,))
+        thread = threading.Thread(target=self.run, args=(node, os, name,))
         thread.daemon = True
         thread.start()
 
     def run(self):
-        return deployment(self.node, self.os)
+        return deployment(self.node, self.os, self.name)
 
 
-@app.route('/')
-@app.route('/home')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/home', methods=['GET', 'POST'])
 def home():
     form2 = RegistrationForm()
     form = LoginForm()
+    if form2.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form2.password.data).decode('utf-8')
+        user = User(username=form2.username.data, email=form2.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Account created for ' + str(form2.username.data) + '.', 'success')
+        return redirect(url_for('login'))
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            print("Authenticated")
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+        else:
+            flash('Login failed. Please check username and password.', 'danger')
     return render_template('home.html', title='Home', form=form, form2=form2)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -50,12 +68,10 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print("in login")
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        print("Here1")
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             print("Authenticated")
@@ -90,7 +106,7 @@ def account():
     return render_template('account.html', title='Account', form=form)
 
 
-@app.route('/workload')
+@app.route('/workload', methods=['GET', 'POST'])
 def workload_defined():
     # machine & deep learning
     # in memory
@@ -99,7 +115,10 @@ def workload_defined():
     instance_provider = None
 
     if form.validate_on_submit():
-        instance, top_three, valid_instances = find_instance_workload(int(form.type.data))
+        print("----VALID ON SUBMIT ----")
+        print(request.form.get('type'))
+        input = request.form.get('type')
+        instance, top_three, valid_instances = find_instance_workload(input)
         types = []
         for i in top_three:
             types.append(detect_type(i))
@@ -128,25 +147,24 @@ def custom():
     instance_provider = None
 
     form = ResourceForm()
-
     if form.validate_on_submit():
         instance, top_three, valid_instances = find_instance(int(form.memory.data), int(form.storage.data))
         types = []
         os = form.os.data
         for i in top_three:
             types.append(detect_type(i))
-
         instance_provider = detect_type(instance)
 
         return render_template('options.html', title='Options', instance=instance,
                                top_three=top_three, instance_provider=instance_provider, types=types,
-                               length=len(top_three), os=os)
+                               length=len(top_three), os=os, instance_name=form.name.data)
 
     if request.method == 'POST':
         user_option = request.form.get('options')
         print("User option: " + user_option)
         if user_option == "1":
             input = str(request.form.get('instance1'))
+            instance_name = str(request.form.get('instance_name'))
             id, name, ram, disk, price, bandwidth, driver, extra = format_input(input)
             os = request.form.get('os1')
             provider = driver
@@ -163,7 +181,7 @@ def custom():
                 instance = NodeSize(id=id, name=name, ram=int(ram), disk=int(disk), bandwidth=bandwidth, price=float(price), driver=driver, extra=None)
                 print(instance)
 
-            thread = DeploymentThread(instance, os)
+            thread = DeploymentThread(instance, os, instance_name)
             node = thread.run()
             print(node)
 
