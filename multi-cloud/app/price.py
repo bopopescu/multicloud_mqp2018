@@ -96,22 +96,27 @@ def find_instance_workload(workload):
             # append them all, algo will find cheapest one
             valid_instances.append(s)
 
-    for gcp in gcp_sizes:
-        # check gcp to see if it is of the workload we need
-        if workload == "ml":
-            print("machine learning")
-
     instance = find_lowest_price(valid_instances)
     top_three = find_three_choices(valid_instances)
-    print("------")
-    print(top_three)
-    print("------")
+
+    for gcp in gcp_sizes:
+        if workload == "ml":
+            if "model" in gcp.name:
+                valid_instances.append(s)
+        elif workload == "im":
+            if ("n1") in gcp.id:
+                valid_instances.append(gcp)
+        elif workload == "gp":
+            # general purpose = all AMIs are technically ok to use
+            # append them all, algo will find cheapest one
+            valid_instances.append(gcp)
 
     if instance != None:
         print_instance_stats(instance)
         return instance, top_three, valid_instances
     else:
         return None, None, None
+
 
 def find_lowest_price(valid_instances):
     min = 100

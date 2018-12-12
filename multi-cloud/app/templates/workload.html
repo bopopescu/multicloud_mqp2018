@@ -1,7 +1,7 @@
 {% extends "layout2.html" %}
 {% block content %}
     <h1 style="padding:80px;"></h1>
-    <form method="POST" action="/workload">
+    <form method="POST, GET" action='/workload'>
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-6"> Define Resources</legend>
@@ -9,11 +9,6 @@
                     {{ form.type.label(class="form-control-label") }}
                     {% if form.type.errors %}
                         {{ form.type(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.os.errors %}
-                                <span> {{ error }} </span>
-                            {% endfor %}
-                        </div>
                     {% else %}
                         {{ form.type(class="form-control form-control-lg") }}
                     {% endif %}
