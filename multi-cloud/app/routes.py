@@ -127,11 +127,29 @@ def workload_defined():
         return render_template('options.html', title='Options', instance=instance,
                                top_three=top_three, instance_provider=instance_provider, types=types,
                                length=len(top_three))
+    else:
+        print("NOT VALID ON SUBMIT!!!!!!")
 
     if request.method == 'POST':
-        user_option = request.form.get('options')
+        """
+        user_option = request.form.get('type')
         print("User option: " + user_option)
-        return render_template('login.html', title='Login', form=form)
+        if user_option == "ml":
+            thread = DeploymentThread(instance, os, instance_name)
+            node = thread.run()
+        return render_template('deployment.html', title='Deploy', node=node.id, provider=provider,
+                               ip_address=node.private_ips[0], name=node.name)
+        """
+        input = request.form.get('type')
+        instance, top_three, valid_instances = find_instance_workload(input)
+        types = []
+        for i in top_three:
+            types.append(detect_type(i))
+        instance_provider = detect_type(instance)
+
+        return render_template('options.html', title='Options', instance=instance,
+                               top_three=top_three, instance_provider=instance_provider, types=types,
+                               length=len(top_three))
 
     return render_template('workload.html', title='Workload-based', form=form)
 
