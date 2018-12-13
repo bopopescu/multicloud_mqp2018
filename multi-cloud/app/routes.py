@@ -115,7 +115,6 @@ def workload_defined():
     instance_provider = None
 
     if form.validate_on_submit():
-        print("----VALID ON SUBMIT ----")
         print(request.form.get('type'))
         input = request.form.get('type')
         instance, top_three, valid_instances = find_instance_workload(input)

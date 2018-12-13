@@ -61,7 +61,6 @@ def find_instance(memory, storage):
     top_three = find_three_choices(valid_instances)
 
     if instance != None:
-        print_instance_stats(instance)
         return instance, top_three, valid_instances
     else:
         return None, None, None
@@ -85,8 +84,7 @@ def find_instance_workload(workload):
     for s in aws_sizes:
         # check s to see if it is of the workload we need
         if workload == "ml":
-            if "Deep Learning" in s.name:
-                print("Here")
+            if ("c5" or "c5d") in s.id:
                 valid_instances.append(s)
         elif workload == "im":
             if ("r4."or "r5."or "r5a."or "r5d."or "x1."or "x1e."or "z1d") in s.id:
@@ -101,18 +99,16 @@ def find_instance_workload(workload):
 
     for gcp in gcp_sizes:
         if workload == "ml":
-            if "model" in gcp.name:
+            if "n1-highcpu" in gcp.name:
                 valid_instances.append(s)
         elif workload == "im":
-            if ("n1") in gcp.id:
+            if ("n1-ultramem") in gcp.name:
                 valid_instances.append(gcp)
         elif workload == "gp":
             # general purpose = all AMIs are technically ok to use
             # append them all, algo will find cheapest one
             valid_instances.append(gcp)
-
     if instance != None:
-        print_instance_stats(instance)
         return instance, top_three, valid_instances
     else:
         return None, None, None
@@ -131,7 +127,6 @@ def find_lowest_price(valid_instances):
 def find_three_choices(valid_instances):
     all_instances = valid_instances
     top_three = []
-    print_all_valid_instances(valid_instances)
 
     while len(top_three) != 3 and len(all_instances) != 0:
         instance = find_lowest_price(all_instances)
