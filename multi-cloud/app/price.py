@@ -7,6 +7,8 @@ from .config import GCP_PRICE_FILE, AWS_PRICE_FILE, EC2_SECRET_KEY, EC2_ACCESS_I
 TIMESTAMP_FILE = "app/timestamp.txt"
 margin = timedelta(days = 10)
 
+# SWITCH FOR TESTING
+test_flag = 1
 
 # Example Output for pricing
 # >>> sizes[:2]
@@ -36,9 +38,7 @@ def find_instance(memory, storage):
     gcp_sizes = []
     aws_sizes = []
 
-    import unit_tests
-
-    if unit_tests.test_flag == 1:
+    if test_flag == 1:
         if current_time > (get_timestamp() + margin):
             gather_prices()
             gather_images()
@@ -48,7 +48,7 @@ def find_instance(memory, storage):
         else:
             aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
             gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
-    elif unit_tests.test_flag == 2:
+    elif test_flag == 2:
         # AWS Connection
         cls = get_driver(Provider.EC2)
         aws_driver = cls(EC2_ACCESS_ID, EC2_SECRET_KEY, region="us-east-1")
@@ -86,9 +86,7 @@ def find_instance_workload(workload):
     gcp_sizes = []
     aws_sizes = []
 
-    import unit_tests
-
-    if unit_tests.test_flag == 1:
+    if test_flag == 1:
         if current_time > (get_timestamp() + margin):
             gather_prices()
             gather_images()
@@ -98,7 +96,7 @@ def find_instance_workload(workload):
         else:
             aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
             gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
-    elif unit_tests.test_flag == 2:
+    elif test_flag == 2:
         # AWS Connection
         cls = get_driver(Provider.EC2)
         aws_driver = cls(EC2_ACCESS_ID, EC2_SECRET_KEY, region="us-east-1")

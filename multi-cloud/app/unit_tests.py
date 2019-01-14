@@ -5,9 +5,10 @@ from price import find_instance, find_instance_workload, find_lowest_price, find
 # Command to run: "python -m app.unit_tests"
 # Set flag to 1 for optimized way
 # Set flag to 2 for the unoptimized way
-# test_flag is in price.py due to import error
 
-test_flag = 1
+
+# ** NOTE *** test_flag is in price.py due to import error
+
 
 # ------------------------------------------------------------------------------------
 #                                     FIND_INSTANCE
