@@ -1,4 +1,5 @@
 from libcloud.compute.types import Provider
+from libcloud.compute.drivers.gce import GCENodeDriver
 from libcloud.compute.providers import get_driver
 from app.gather_prices import read_prices_from_file
 from app.config import GCP_PROJECT_ID, GCP_SECRET_KEY, GCP_CLIENT_ID, GCP_IMAGES_FILE, EC2_ACCESS_ID, EC2_SECRET_KEY, AWS_IMAGES_FILE
@@ -6,8 +7,9 @@ from app.config import GCP_PROJECT_ID, GCP_SECRET_KEY, GCP_CLIENT_ID, GCP_IMAGES
 
 def deployment(NodeSize, os, name):
     # create driver
+    print(NodeSize.driver)
 
-    if NodeSize.driver == get_driver(Provider.GCE):
+    if type(NodeSize.driver) is GCENodeDriver:
         ComputeEngine = get_driver(Provider.GCE)
         gcp_driver = ComputeEngine(GCP_CLIENT_ID, GCP_SECRET_KEY, project=GCP_PROJECT_ID, datacenter="us-east1-b", auth_type="IA")
         images = read_prices_from_file(GCP_IMAGES_FILE)
