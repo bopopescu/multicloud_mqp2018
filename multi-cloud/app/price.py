@@ -1,7 +1,8 @@
-from libcloud.compute.drivers.ec2 import BaseEC2NodeDriver
+from libcloud.compute.drivers.ec2 import BaseEC2NodeDriver, Provider
+from libcloud.compute.providers import get_driver
 from datetime import datetime, timedelta
 from .gather_prices import gather_prices, read_prices_from_file, gather_images
-from .config import GCP_PRICE_FILE, AWS_PRICE_FILE
+from .config import GCP_PRICE_FILE, AWS_PRICE_FILE, EC2_SECRET_KEY, EC2_ACCESS_ID, GCP_CLIENT_ID, GCP_SECRET_KEY, GCP_PROJECT_ID
 
 TIMESTAMP_FILE = "app/timestamp.txt"
 margin = timedelta(days = 10)
@@ -35,15 +36,29 @@ def find_instance(memory, storage):
     gcp_sizes = []
     aws_sizes = []
 
-    if current_time > (get_timestamp() + margin):
-        gather_prices()
-        gather_images()
-        aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
-        gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
-        write_timestamp(current_time)
-    else:
-        aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
-        gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
+    import unit_tests
+
+    if unit_tests.test_flag == 1:
+        if current_time > (get_timestamp() + margin):
+            gather_prices()
+            gather_images()
+            aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
+            gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
+            write_timestamp(current_time)
+        else:
+            aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
+            gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
+    elif unit_tests.test_flag == 2:
+        # AWS Connection
+        cls = get_driver(Provider.EC2)
+        aws_driver = cls(EC2_ACCESS_ID, EC2_SECRET_KEY, region="us-east-1")
+        aws_sizes = aws_driver.list_sizes()
+
+        # Google Cloud Connection
+        ComputeEngine = get_driver(Provider.GCE)
+        gcp_driver = ComputeEngine(GCP_CLIENT_ID, GCP_SECRET_KEY, project=GCP_PROJECT_ID, datacenter="us-east1",
+                                   auth_type="IA")
+        gcp_sizes = gcp_driver.list_sizes()
 
     for s in aws_sizes:
         if s.ram >= memory and (s.ram <= (memory + 1000)):
@@ -71,15 +86,29 @@ def find_instance_workload(workload):
     gcp_sizes = []
     aws_sizes = []
 
-    if current_time > (get_timestamp() + margin):
-        gather_prices()
-        gather_images()
-        aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
-        gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
-        write_timestamp(current_time)
-    else:
-        aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
-        gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
+    import unit_tests
+
+    if unit_tests.test_flag == 1:
+        if current_time > (get_timestamp() + margin):
+            gather_prices()
+            gather_images()
+            aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
+            gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
+            write_timestamp(current_time)
+        else:
+            aws_sizes = read_prices_from_file(AWS_PRICE_FILE)
+            gcp_sizes = read_prices_from_file(GCP_PRICE_FILE)
+    elif unit_tests.test_flag == 2:
+        # AWS Connection
+        cls = get_driver(Provider.EC2)
+        aws_driver = cls(EC2_ACCESS_ID, EC2_SECRET_KEY, region="us-east-1")
+        aws_sizes = aws_driver.list_sizes()
+
+        # Google Cloud Connection
+        ComputeEngine = get_driver(Provider.GCE)
+        gcp_driver = ComputeEngine(GCP_CLIENT_ID, GCP_SECRET_KEY, project=GCP_PROJECT_ID, datacenter="us-east1",
+                                   auth_type="IA")
+        gcp_sizes = gcp_driver.list_sizes()
 
     for s in aws_sizes:
         # check s to see if it is of the workload we need
