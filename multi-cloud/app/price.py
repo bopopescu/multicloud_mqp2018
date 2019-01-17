@@ -170,7 +170,6 @@ def find_three_choices(valid_instances):
     return top_three
 
 
-
 def print_instance_stats(instance):
     print("Instance ID: " + str(instance.id))
     print("Instance Name: " + str(instance.name))

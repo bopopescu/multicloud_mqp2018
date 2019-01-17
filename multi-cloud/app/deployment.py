@@ -7,13 +7,10 @@ from app.config import GCP_PROJECT_ID, GCP_SECRET_KEY, GCP_CLIENT_ID, GCP_IMAGES
 
 def deployment(NodeSize, os, name):
     # create driver
-    print(NodeSize.driver)
-
     if type(NodeSize.driver) is GCENodeDriver:
         ComputeEngine = get_driver(Provider.GCE)
         gcp_driver = ComputeEngine(GCP_CLIENT_ID, GCP_SECRET_KEY, project=GCP_PROJECT_ID, datacenter="us-east1-b", auth_type="IA")
         images = read_prices_from_file(GCP_IMAGES_FILE)
-        print(images[os])
         image = images[os]
         node = gcp_driver.create_node(name=name, size=NodeSize.name, image=image, location="us-east1-b")
         return node
@@ -32,7 +29,8 @@ def get_node(provider, id):
         ComputeEngine = get_driver(Provider.GCE)
         gcp_driver = ComputeEngine(GCP_CLIENT_ID, GCP_SECRET_KEY, project=GCP_PROJECT_ID, datacenter="us-east1",
                                    auth_type="IA")
-        node = gcp_driver.ex_get_volume(id, zone=all, use_cache=False)
+        node = gcp_driver.ex_get_node(id)
+        return node
 
     else:
         cls = get_driver(Provider.EC2)
@@ -52,6 +50,25 @@ def wait_for_node(provider, node):
         driver = cls(EC2_ACCESS_ID, EC2_SECRET_KEY, region="us-east-1")
         tuple = driver.wait_until_running(node)
         return tuple
+
+
+def destroy(provider, node):
+    if provider == 'Google':
+        ComputeEngine = get_driver(Provider.GCE)
+        gcp_driver = ComputeEngine(GCP_CLIENT_ID, GCP_SECRET_KEY, project=GCP_PROJECT_ID, datacenter="us-east1",
+                                   auth_type="IA")
+        gcp_driver.destroy_node(node)
+    else:
+        cls = get_driver(Provider.EC2)
+        driver = cls(EC2_ACCESS_ID, EC2_SECRET_KEY, region="us-east-1")
+        driver.destroy_node(node)
+
+
+def gce_destroy_all(node_list):
+    ComputeEngine = get_driver(Provider.GCE)
+    gcp_driver = ComputeEngine(GCP_CLIENT_ID, GCP_SECRET_KEY, project=GCP_PROJECT_ID, datacenter="us-east1",
+                               auth_type="IA")
+    gcp_driver.ex_destroy_multiple_nodes(node_list)
 
 
 

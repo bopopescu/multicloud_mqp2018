@@ -2,7 +2,7 @@ from libcloud.compute.types import Provider
 from libcloud.compute.providers import get_driver
 from datetime import timedelta
 import pickle
-from .config import GCP_PROJECT_ID, GCP_SECRET_KEY, GCP_CLIENT_ID, GCP_IMAGES_FILE, GCP_PRICE_FILE, EC2_ACCESS_ID, EC2_SECRET_KEY, AWS_IMAGES_FILE, AWS_PRICE_FILE
+from config import GCP_PROJECT_ID, GCP_SECRET_KEY, GCP_CLIENT_ID, GCP_IMAGES_FILE, GCP_PRICE_FILE, EC2_ACCESS_ID, EC2_SECRET_KEY, AWS_IMAGES_FILE, AWS_PRICE_FILE
 
 # AWS Amazon Machine Images
 # Access using aws_images["linux"]
@@ -61,14 +61,10 @@ def gather_prices():
     write_prices_to_file("gcp_sizes.txt", gcp_sizes)
 
 
-#gather_prices()
-
-
 def gather_images():
     # AWS Connection
     cls = get_driver(Provider.EC2)
     aws_driver = cls(EC2_ACCESS_ID, EC2_SECRET_KEY, region="us-east-1")
-    aws_image_list = aws_driver.list_images()
 
     images = {
         "linux": None,
@@ -77,20 +73,24 @@ def gather_images():
         "unix": None
     }
 
-    for i in aws_image_list:
-        if i.id == aws_images["linux"]:
-            images["linux"] = i
-        if i.id == aws_images["win"]:
-            images["win"] = i
-        if i.id == aws_images["rhel"]:
-            images["rhel"] = i
-        if i.id == aws_images["unix"]:
-            images["unix"] = i
+    images["linux"] = aws_driver.get_image(aws_images["linux"])
+    images["win"] = aws_driver.get_image(aws_images["win"])
+    images["rhel"] = aws_driver.get_image(aws_images["rhel"])
+    images["unix"] = aws_driver.get_image(aws_images["unix"])
+
+    # for i in aws_image_list:
+    #     if i.id == aws_images["linux"]:
+    #         images["linux"] = i
+    #     if i.id == aws_images["win"]:
+    #         images["win"] = i
+    #     if i.id == aws_images["rhel"]:
+    #         images["rhel"] = i
+    #     if i.id == aws_images["unix"]:
+    #         images["unix"] = i
 
     # Google Cloud Connection
     ComputeEngine = get_driver(Provider.GCE)
     gcp_driver = ComputeEngine(GCP_CLIENT_ID, GCP_SECRET_KEY, project=GCP_PROJECT_ID, auth_type="IA")
-    gcp_image_list = gcp_driver.list_images()
 
     images_gcp = {
         "linux": None,
@@ -99,23 +99,30 @@ def gather_images():
         "unix": None
     }
 
-    for i in gcp_image_list:
-        if i.name == gcp_images["linux"]:
-            images_gcp["linux"] = i
-        if i.name == gcp_images["win"]:
-            images_gcp["win"] = i
-        if i.name == gcp_images["rhel"]:
-            images_gcp["rhel"] = i
-        if i.name == gcp_images["unix"]:
-            images_gcp["unix"] = i
+    images_gcp["linux"] = gcp_driver.ex_get_image(gcp_images["linux"])
+    images_gcp["win"] = gcp_driver.ex_get_image(gcp_images["win"])
+    images_gcp["rhel"] = gcp_driver.ex_get_image(gcp_images["rhel"])
+    images_gcp["unix"] = gcp_driver.ex_get_image(gcp_images["unix"])
 
-    write_prices_to_file("aws_images.txt", images)
-    write_prices_to_file("gcp_images.txt", images_gcp)
 
+    # for i in gcp_image_list:
+    #     if i.name == gcp_images["linux"]:
+    #         images_gcp["linux"] = i
+    #     if i.name == gcp_images["win"]:
+    #         images_gcp["win"] = i
+    #     if i.name == gcp_images["rhel"]:
+    #         images_gcp["rhel"] = i
+    #     if i.name == gcp_images["unix"]:
+    #         images_gcp["unix"] = i
+    #
+
+    write_prices_to_file(AWS_IMAGES_FILE, images)
+    write_prices_to_file(GCP_IMAGES_FILE, images_gcp)
 
 
 def write_prices_to_file(filename, sizes):
-    f = open(filename, 'w')
+    print("Filename: " + filename)
+    f = open(filename, 'w+')
     pickle.dump(sizes, f)
     f.close()
 
@@ -126,3 +133,4 @@ def read_prices_from_file(filename):
     f.close()
     return sizes
 
+gather_prices()
